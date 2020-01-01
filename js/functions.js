@@ -49,6 +49,14 @@ const findGetParameter = function(parameterName) {
 	return result;
 };
 
+const isInt = function(value) {
+	if (isNaN(value)) {
+		return false;
+	}
+	var x = parseFloat(value);
+	return (x | 0) === x;
+	}
+
 Date.dateDiff = function(datepart, diff) {
 	datepart = datepart.toLowerCase();
 	let divideBy = {

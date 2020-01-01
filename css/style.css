@@ -192,9 +192,10 @@ input, select {
   align-content: center;
   grid-template-columns: repeat(20, 1fr);
   height: 25px;
-  margin-left: 7px;
+  margin: 0px;
   position: relative;
-  width: 98%;
+  width: 100%;
+  cursor: initial;
   -webkit-animation: 1s ease-out 0s 1 slideInFromLeft;
   -moz-animation:    1s ease-out 0s 1 slideInFromLeft;
   -o-animation:      1s ease-out 0s 1 slideInFromLeft;
@@ -219,6 +220,7 @@ input, select {
 .box-label > .name {
   margin: 0;
   text-align: left;
+  line-height: 30px;
 }
 .box-label > p i {
   padding: 3px;
@@ -244,21 +246,6 @@ input, select {
   right: -2px;
 }
 
-#browse-area {
-  position: absolute;
-  z-index: 4;
-  background: #3df4c9;
-  border: 2px solid #005f42;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  padding: 16px 0;
-  -webkit-transition: all 500ms;
-  -moz-transition: all 500ms;
-  -ms-transition: all 500ms;
-  -o-transition: all 500ms;
-  transition: all 500ms;
-}
 #credit-area {
   bottom: 75px;
 }
@@ -326,9 +313,19 @@ input, select {
   transition: all 500ms;
 }
 #browse-area {
-  width: 300px;
-  top: 54px;
-  right: 20px;
+  width: 70%;
+  height: 100%;
+  right: 0;
+
+  position: absolute;
+  z-index: 4;
+  background: #3df4c9;
+  padding: 16px 0;
+  -webkit-transition: all 500ms;
+  -moz-transition: all 500ms;
+  -ms-transition: all 500ms;
+  -o-transition: all 500ms;
+  transition: all 500ms;
 }
 #browse-area:after {
   content  : "";
@@ -346,15 +343,52 @@ input, select {
   top: 16px;
   left: 16px;
 }
-.title {
+div#browse-new-sample {
   text-align: center;
+  margin-left: 0;
+}
+.fa-trash::before {
+  margin: 1px;
+}
+i.fas {
+  border: 1px solid rgba(0, 95, 66, 0.24);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.38);
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+  line-height: 20px;
+  margin-top: 5px;
+}
+i.fas.open-set, i.fas.open-folder {
+  font-family: inherit;
+  width: 100px;
+  line-height: 16px;
+}
+i.fas.open-folder {
+  position: relative;
+  height: 29px;
+}
+i.fas.open-folder p{
+  line-height: 19px;
+  margin-top: 4px;
+}
+i.fas.fa-folder-open {
+  border: none;
+  background: none;
+}
+.title {
+  text-align: left;
+  padding-left: 25px;
+}
+.line-set {
+  display: inline-table;
+}
+.line-set > div {
+  padding: 0 15px;
 }
 .line-set-large{
-  min-width: 100%;
   text-align: left;
-  align-content: center;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-areas: "a a a";
   transition: 200ms linear;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -367,7 +401,8 @@ input, select {
 .number {
   display: block;
   font-size: small;
-  width: 16px;
+  width: 12px;
+  line-height: 12px;
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
@@ -488,6 +523,8 @@ input, select {
   overflow-y: scroll;
   overflow-x: hidden;
   height: 50vh;
+  width: 95%;
+  margin: 0 25px;
 }
 #surface {
   display: block;
@@ -507,7 +544,7 @@ input, select {
   display: inline-block;
   position: relative;
   vertical-align: middle;
-  margin: 0 20px;
+  margin: 0 15px;
   height: auto;
 }
 

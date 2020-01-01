@@ -96,15 +96,17 @@
             <div class="line-insts">
                 <div id="inst-new" class="line-inst line-inst-margin-top line-inst-padding">
                     <div id="set-{{d.instruments.length}}" class="box-label template-1" data-ng-click="newInst()">
-                        <p class="grid-area-c fas fa-plus open-set"></p>
+                        <i class="grid-area-c fas fa-plus click"></i>
                         <p class="grid-area-a name">New Instrument</p>
                     </div>
                     <div class="line-steps line-steps-height">
                         <div class="inst-new-par step-height">
-                            <input id="inst-new-name" aria-label="inst-new-name" type="text" placeholder="Name" />
+                            <input id="inst-new-name" aria-label="inst-new-name" type="text" placeholder="Track Name" />
                         </div>
                         <div  id="browse-new-sample" class="inst-new-par step-height">
-                            <strong class="click" data-ng-click="openNavigateArea()">Sound Library <i class="fas fa-folder-open"></i></strong><br>
+                            <i class="fas open-folder click" data-ng-click="openNavigateArea()">
+                                <p >Samples </p>
+                            </i>
                             <small>{{d.sampleOn}}</small>
                         </div>
                     </div>
@@ -121,7 +123,7 @@
                         <p class="grid-area-d clear" ng-click="clear(instIndex)"><i class="fas fa-cut"></i></p>
                         <p class="grid-area-e clear" ng-click="copy(instIndex)"><i class="fas fa-copy"></i></p>
                         <p class="grid-area-f clear" ng-click="paste(instIndex)"><i class="fas fa-paste"></i></p>
-                        <p class="grid-area-g edit" ng-click="select(instIndex)"><i class="open-set"></i> Edit</p>
+                        <p class="grid-area-g edit" ng-click="select(instIndex)"><i class="fas open-set">Edit</i></p>
                     </div>
 
                     <!-- Edit Area --!>
@@ -150,7 +152,7 @@
                             <small class="value">{{d.pattern[instIndex].shift}}</small>
                             <i class="fas fa-caret-down" data-ng-click="shift(false, instIndex)"></i>
                         </p>
-                        <p class="grid-area-g click" data-ng-click="delete()">
+                        <p class="grid-area-g click" data-ng-click="delete(instIndex)">
                             <i class="fas fa-trash"></i>
                         </p>
                     </div>

@@ -1,6 +1,7 @@
 toastr.options.progressBar = true;
 toastr.options.closeButton = true;
 
+const site = 'http://localhost:10001/'
 const app = angular.module("drummachineApp", []);
 /*  BUG
 
@@ -65,11 +66,13 @@ app.controller("DmController", function($scope, $compile) {
             }
             
             let child = document.createElement('div');
-            child.classList.add('line-set-large', 'click');
-            child.innerHTML = '<div class="line-set-large click">' +
-            '<div class="grid-area-a" data-ng-click="load(\'' +id +"')\">" +
-            "<p><i class=\"fas fa-caret-right\"></i> <strong>[" +id +"]</strong> <small>" +when + "</small> " +
-            "<br>" + title + "</p></div>";
+            child.classList.add('line-set', 'click');
+            child.innerHTML = ' <div class="line-set-large click">' +
+                                    '<a href="' + site + '?p=' + id +'">' +
+                                        "<p><strong>[" +id +"]</strong> <small>" +when + "</small> " +
+                                        "<br>" + title + "</p>" +
+                                    "</a>" +
+                                '</div>';
             let $el = latestPattern.appendChild(child);
             $compile($el)($scope);
          });
@@ -431,47 +434,36 @@ app.controller("DmController", function($scope, $compile) {
 
    */
 
-  $scope.setBeat = function(inc, inst) {
-      if (playing) {
-          toastr.warning('Beat cannot be set while playing', 'Beat Rules')
-      } else {
-          let newbeat = d.pattern[inst].beat.id;
-          let basebeat = null;
-          let basebeat_occurs = [];
-          // Controls on new beat
-          newbeat = inc ? newbeat += 1 : newbeat -= 1;
-          newbeat = newbeat === 0 ? 8 : newbeat; // round inc
-          newbeat = newbeat === 9 ? 1 : newbeat; // round inc
-          if (newbeat === 6) newbeat = inc ? newbeat+=1 : newbeat-=1; // skip number 6
-
-          //  - prevent multi odd time
-          // if exists an instrument with an odd time we save it to limit user selection because
-          // grid has a limited size and multiple odd time like: 5,7,4 need a wide grid built by
-          // a 1/140 unit (lcm of 5,7,4)
-          d.pattern.forEach(function (element, index) {
-              if (element.beat.id !== 1 && element.beat.id % 2) {
-                  basebeat = element.beat.id;
-                  if (index !== inst) {
-                      basebeat_occurs.push(index); // in order to skip single odd time
-                  }
-              }
-          });
-
-          if (basebeat !== null && newbeat % 2) {
-              if(newbeat!== 1 && basebeat_occurs.length > 0  && newbeat !== basebeat) {
-                  newbeat = inc ? newbeat+=1 : newbeat-=1;
-              }
-              // skip number 6
-              if (newbeat === 6) {
-                  newbeat = inc ? newbeat+=1 : newbeat-=1;
-              }
-          }
-
-          d.pattern[inst].beat = d.beat[newbeat];
-
-          $scope.updateBeat();
-      }
-  };
+    $scope.setBeat = function(inc, inst) {
+        if (playing) {
+            toastr.warning('Beat cannot be set while playing', 'Beat Rules')
+        } else {
+            let newbeat = d.pattern[inst].beat.id;
+            let oddbeat = 'undefined';
+            
+            //  - prevent multi odd time
+            // if exists an instrument with an odd time we save it to limit user selection because
+            // grid has a limited size and multiple odd time like: 5,7,4 need a wide grid built by
+            // a 1/140 unit (lcm of 5,7,4)
+            d.pattern.forEach(function (element, index) {
+                if (element.beat.id !== 1 && element.beat.id % 2) {
+                    oddbeat = element.beat.id;
+                }
+            });
+            
+            newbeat = inc ? newbeat += 1 : newbeat -= 1;
+            // Controls on new beat
+            newbeat = newbeat === 0 ? 8 : newbeat === 9 ? 1 : newbeat;
+            
+            if (oddbeat !== 'undefined') {
+                while((newbeat % 2 && (newbeat !== oddbeat  && newbeat !== 1)) || newbeat == 6) {
+                    newbeat = inc ? newbeat+=1 : newbeat-=1;
+                }
+            }
+            d.pattern[inst].beat = d.beat[newbeat];
+            $scope.updateBeat();
+        }
+    };
 
     $scope.updateBeat = function() {
         let lcm_beats = [];
@@ -480,37 +472,52 @@ app.controller("DmController", function($scope, $compile) {
         let sol = 0;
         let len = 0;
 
+
         d.pattern.forEach(function (element) {
             lcm_beats.push(element.beat.id);
-
+            
             if (lcm_beats.length === 2) {
                 lcm = math.lcm(lcm_beats[0], lcm_beats[1]);
                 lcm_beats = [];
                 lcm_beats.push(lcm);
             }
-
+            
             // check if there is an odd time
             if (element.beat.id % 2) {
                 if (element.beat.id !== 1) odd = true;
             }
         });
 
-        d.maxoffset = lcm;
+        if (d.pattern.length > 1) {
+            d.maxoffset = lcm;
 
-        // if an odd time
-        if (odd) {
-            // smallest tatum must be >= 1/13
-            while(d.maxoffset < 13) {
-                d.maxoffset += d.maxoffset;
+            // if an odd time
+            if (odd) {
+                // smallest tatum must be >= 1/13
+                while(d.maxoffset < 13) {
+                    d.maxoffset += d.maxoffset;
+                }
+                // if an even time
+            } else {
+                // smallest tatum must be >= 1/64
+                while(d.maxoffset < 60) {
+                    d.maxoffset += d.maxoffset;
+                }
             }
-            // if an even time
         } else {
-            // smallest tatum must be >= 1/64
-            while(d.maxoffset < 60) {
-                d.maxoffset += d.maxoffset;
+            // if an odd time
+            if (odd) {
+                // if it is not an integer
+                while(!isInt(d.maxoffset / d.pattern[0].beat.id)) {
+                    d.maxoffset = d.maxoffset + 1;
+                }
+            } else {
+                while(!isInt(d.maxoffset / d.pattern[0].beat.id)) {
+                    d.maxoffset = d.maxoffset - 1;
+                }
             }
         }
-
+        
         // resize instruments grid
         d.pattern.forEach(function (element, index) {
             sol = d.maxoffset / element.beat.id;
@@ -607,10 +614,9 @@ app.controller("DmController", function($scope, $compile) {
     $scope.delete = function(inst) {
         d.pattern.splice(inst, 1);
         d.samples.splice(inst, 1)
-        d.trkOn = 0;
+        d.trkOn = null;
 
         if (d.pattern.length === 0) {
-          $scope.closeEditArea();
           d.maxoffset = 64;
         }
         $scope.select(null);
@@ -901,12 +907,12 @@ $scope.paste = function(inst) {
         if (!playing) {
             // STOP
 
+            // clear loop timeout
+            clearTimeout(toutPly);
             // reset indexClock
             idxClk = 1;
             // reset instrument clock
             $scope.resetClock();
-            // clear loop timeout
-            clearTimeout(toutPly);
             // clean graphics change
             document.querySelectorAll('.button-step').forEach(function (value) {
                 value.classList.remove('clock');
@@ -1007,7 +1013,7 @@ $scope.paste = function(inst) {
       } else {
 
           if (name === '') {
-              toastr.warning('<strong>Name</strong> is required');
+              toastr.warning('<strong>Track Name</strong> is required');
 
           } else if (d.sampleOn === '' || d.sampleOn === null) {
               toastr.warning('Select an <strong>Instrument</strong> from the library');
