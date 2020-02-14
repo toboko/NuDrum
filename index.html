@@ -123,7 +123,7 @@
                          </div>
                         <div class="grid-area-b volume">
                             <div class="abovecontainer">
-                                <p><small>Volume</small></p>
+                                <p><small class="volume-text"><small>VOL</small></small></p>
                                  <input class="slider" type="range" min="0" max="100" value="50"
                                         ng-model="sliderModel"
                                         ng-change="setVolume(sliderModel, instIndex)">
@@ -131,29 +131,47 @@
                         </div>
                         <div class="grid-area-c beat">
                             <div class="abovecontainer">
-                                <p><small>Beat {{d.pattern[instIndex].beat.id}}/{{d.maxoffset}}</small></p>
+                                <p><small><small>BEAT {{d.pattern[instIndex].beat.id}}/{{d.maxoffset}}</small></small></p>
                             </div>
-                            <p>
-                                <i class="fas fa-caret-up" data-ng-click="setBeat(true, instIndex)"></i>
-                                <i class="fas fa-caret-down" data-ng-click="setBeat(false, instIndex)"></i>
+                            <p class="border-button">
+                                <small class="prev" data-ng-click="setBeat(false, instIndex)">
+                                    <i class="fas fa-caret-left" ></i>
+                                    <small>PRV</small>
+                                </small>
+                                <small class="next" data-ng-click="setBeat(true, instIndex)">
+                                    <small>NXT</small>
+                                    <i class="fas fa-caret-right"></i>
+                                </small>
                             </p>
                         </div>
                         <div class="grid-area-d steps">
                             <div class="abovecontainer">
-                                <p><small>Steps {{d.pattern[instIndex].view}}</small></p>
+                                <p><small><small>STEPS {{d.pattern[instIndex].view}}</small></small></p>
                             </div>
-                            <p>
-                                <i class="fas fa-caret-up" data-ng-click="setOffset(true, instIndex)"></i>
-                                <i class="fas fa-caret-down" data-ng-click="setOffset(false, instIndex)"></i>
+                            <p class="border-button">
+                                <small class="prev" data-ng-click="setOffset(false, instIndex)">
+                                    <i class="fas fa-caret-left"></i>
+                                    <small>PRV</small>
+                                </small>
+                                <small class="next" data-ng-click="setOffset(true, instIndex)">
+                                    <small>NXT</small>
+                                    <i class="fas fa-caret-right"></i>
+                                </small>
                             </p>
                         </div>
                         <div class="grid-area-e shift">
                             <div class="abovecontainer">
-                                <p><small>Shift {{d.pattern[instIndex].shift}}</small></p>
+                                <p><small><small>SHIFT {{d.pattern[instIndex].shift}}</small></small></p>
                             </div>
-                            <p>
-                                <i class="fas fa-caret-up" data-ng-click="shift(true, instIndex)"></i>
-                                <i class="fas fa-caret-down" data-ng-click="shift(false, instIndex)"></i>
+                            <p class="border-button">
+                                <small  class="prev" data-ng-click="shift(false, instIndex)">
+                                    <i class="fas fa-caret-left"></i>
+                                    <small>PRV</small>
+                                </small>
+                                <small  class="next" data-ng-click="shift(true, instIndex)">
+                                    <small>NXT</small>
+                                    <i class="fas fa-caret-right"></i>
+                                </small>
                             </p>
                         </div>
                         <div class="grid-area-f" data-ng-click="delete(instIndex)">
