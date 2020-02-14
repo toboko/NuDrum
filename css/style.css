@@ -13,7 +13,7 @@ html {
   height: 100%;
 }
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 0;
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
@@ -48,17 +48,24 @@ a:hover {
   color: white;
   text-decoration: none;
 }
-i, .button-step, .white-button, .box-label, .click {
+i, .button-step, .white-button, .click {
   cursor: pointer;
 }
 
 input, select {
   padding: 5px;
   border: none;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  border-bottom: 3px solid #005f42;
+  background: none;
   font-family: inherit;
+}
+p {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  margin: auto;
+  font-weight: bold;
+  color: #005f42;
 }
 .grid-area-a {
   grid-area: a;
@@ -80,6 +87,32 @@ input, select {
 }
 .grid-area-g {
   grid-area: g;
+}
+.grid-area-h {
+  grid-area: h;
+}
+.grid-area-i {
+  grid-area: i;
+}
+.grid-area-j {
+  grid-area: j;
+}
+.grid-area-k {
+  grid-area: k;
+}
+.grid-area-g, .grid-area-h, .grid-area-i, .grid-area-j {
+  margin: 0 10px !important;
+}
+
+.name > i {
+  margin-right: 5px !important;
+}
+.beat p small, .steps p small, .shift p small {
+  position: absolute;
+  top: 3px;
+}
+.volume {
+  position: initial !important;
 }
 .text-center {
   text-align: center;
@@ -142,11 +175,12 @@ input, select {
 }
 .button-step {
   float: left;
+  overflow: hidden;
   position: relative;
   width: 55px;
   background: #fff;
   margin: 0 2px;
-  border: 2px solid #fff;
+  border: 2px solid #005f42;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
@@ -163,13 +197,13 @@ input, select {
 }
 
 .button-step.select.clock {
-  background: #FC8280;
+  background: #005E4F;
 }
 .button-step.clock {
-  background: #FC8280;
+  background: #80FFEA;
 }
 .button-step.select {
-  background: #3DF4C9;
+  background: #FF4800;
 }
 .button-step.disabled {
   cursor: not-allowed;
@@ -182,25 +216,32 @@ input, select {
   overflow: hidden;
 }
 .template-1 {
-  grid-template-areas: "c a a a a b b b b b b b b b b b b d e f g";
+  grid-template-areas: "a a b b c c d d e e f f g g h h i i j j";
 }
 .template-2 {
-  grid-template-areas: "a a a b b b c c c d d d g";
+  grid-template-areas: "a a a b b b b";
 }
+.template-3 {
+  grid-template-areas: "a b b b b b";
+}
+
 .box-label {
   display: grid;
-  align-content: center;
-  grid-template-columns: repeat(20, 1fr);
-  height: 25px;
-  margin: 0px;
+  align-content: end;
+  grid-template-columns: repeat(13, 1fr);
+  height: 50px;
+  margin: 0;
   position: relative;
   width: 100%;
-  cursor: initial;
   -webkit-animation: 1s ease-out 0s 1 slideInFromLeft;
   -moz-animation:    1s ease-out 0s 1 slideInFromLeft;
   -o-animation:      1s ease-out 0s 1 slideInFromLeft;
   -ms-transition:    1s ease-out 0s 1 slideInFromLeft;
   animation:         1s ease-out 0s 1 slideInFromLeft;
+}
+.box-label.template-3 {
+  grid-template-columns: repeat(33, 1fr);
+  text-align: center;
 }
 .box-label.template-2 {
   display: none;
@@ -209,18 +250,10 @@ input, select {
   text-align: right;
   margin: 0;
 }
-.box-label > p {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  margin: auto;
-  font-weight: bold;
-  color: #005f42;
-}
+
 .box-label > .name {
   margin: 0;
   text-align: left;
-  line-height: 30px;
 }
 .box-label > p i {
   padding: 3px;
@@ -229,7 +262,17 @@ input, select {
   text-align: center;
   padding: 1px;
 }
-
+.box-label > div p {
+  position: absolute;
+  min-width: 80px;
+  bottom: 0;
+}
+.box-label > div {
+  min-width: 22px;
+  height: inherit;
+  align-content: baseline;
+  position: relative;
+}
 .line-units > div {
   width: 60px;
   position: relative;
@@ -351,16 +394,13 @@ div#browse-new-sample {
   margin: 1px;
 }
 i.fas {
-  border: 1px solid rgba(0, 95, 66, 0.24);
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.38);
   width: 18px;
   height: 18px;
   font-size: 16px;
   line-height: 20px;
   margin-top: 5px;
 }
-i.fas.open-set, i.fas.open-folder {
+i.fas.trash, i.fas.open-folder {
   font-family: inherit;
   width: 100px;
   line-height: 16px;
@@ -373,9 +413,24 @@ i.fas.open-folder p{
   line-height: 19px;
   margin-top: 4px;
 }
-i.fas.fa-folder-open {
+i.fas.fa-folder-open, i.fas.fa-toggle-on, i.fas.fa-toggle-off {
   border: none;
   background: none;
+}
+i.fas.fa-trash {
+  margin-top: -3px;
+}
+i.fas.fa-volume-off {
+  padding-right: 0;
+  margin-right: 0 !important;
+  width: 4px;
+}
+i.fas.fa-plus, i.fas.fa-minus {
+  font-size: 11px;
+  height: 12px;
+  line-height: 10px;
+  margin: 0 0 0 0;
+  vertical-align: middle;
 }
 .title {
   text-align: left;
@@ -401,10 +456,10 @@ i.fas.fa-folder-open {
 .number {
   display: block;
   font-size: small;
-  width: 12px;
-  line-height: 12px;
+  font-weight: 600;
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  margin-top: 5px;
 }
 
 @keyframes slideInFromLeft {
@@ -419,15 +474,11 @@ i.fas.fa-folder-open {
 .line-insts {
   margin-top: 25px;
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 60px;
 }
 .line-inst {
   width: 960px;
   position: relative;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  border: 3px solid #9AF4D9;
   -webkit-animation: 1s ease-out 0s 1 slideInFromLeft;
   -moz-animation:    1s ease-out 0s 1 slideInFromLeft;
   -o-animation:      1s ease-out 0s 1 slideInFromLeft;
@@ -435,17 +486,17 @@ i.fas.fa-folder-open {
   animation:         1s ease-out 0s 1 slideInFromLeft;
 }
 .line-inst:nth-child(odd) {
-  background-color: #3DF4C9;
+  /* background-color: #3DF4C9; */
 }
 .line-inst:nth-child(even) {
   /*background-color: #FC8280;*/
-  background-color: #9AF4D9;
+  /* background-color: #9AF4D9; */
 }
 .line-inst-margin-top {
-  margin-top: 5px;
+  margin-top: 0;
 }
 .line-inst-padding {
-  padding: 2px;
+  padding: 6px;
 }
 #line-tempo .title {
   text-align: center;
@@ -480,6 +531,7 @@ i.fas.fa-folder-open {
   width: 200vh;
   height: 50px;
   bottom: 0;
+  right: 0;
   position: fixed;
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+100 */
   background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
@@ -491,9 +543,15 @@ i.fas.fa-folder-open {
   max-height: calc(100vh - 30px);
   display: block;
   overflow-y: scroll;
+  overflow-x: hidden;
   -ms-overflow-style: none;
   overflow: -moz-scrollbars-none;
+  scrollbar-width: none;
 }
+#main-area::-webkit-scrollbar {
+  display: none;
+}
+
 #main-area > div {
   display: block;
   vertical-align: top;
@@ -503,7 +561,7 @@ i.fas.fa-folder-open {
   align-content: center;
   grid-template-columns: repeat(8, 1fr);
   grid-template-areas: "a a a a b b c c";
-  background: #3df4c9;
+  border-bottom: 17px solid #FF4800;
 }
 #control-area > div > p {
   text-align: left;
@@ -527,7 +585,6 @@ i.fas.fa-folder-open {
   margin: 0 25px;
 }
 #surface {
-  display: block;
   margin: auto;
   width: min-content;
   width: -moz-fit-content;
@@ -551,15 +608,6 @@ i.fas.fa-folder-open {
 div#simple-set > div {
   float: left;
 }
-
-/*.beat-8 > .button-step {width: 112px;}*/
-/*.beat-7 > .button-step {width: 97px;}*/
-/*.beat-6 > .button-step {width: 82px;}*/
-/*.beat-5 > .button-step {width: 67px;}*/
-/*.beat-4 > .button-step {width: 52px;}*/
-/*.beat-3 > .button-step {width: 37px;}*/
-/*.beat-2 > .button-step {width: 22px;}*/
-/*.beat-1 > .button-step {width: 7px;}*/
 
 .beat-1 > .button-step { width: calc((100% / 1) - 8px)}
 .beat-2 > .button-step { width: calc((100% / 2) - 8px)}
@@ -626,13 +674,80 @@ div#simple-set > div {
 .beat-63 > .button-step { width: calc((100% / 63) - 8px)}
 .beat-64 > .button-step { width: calc((100% / 64) - 8px)}
 
+.beat-45 > .button-step .number,
+.beat-46 > .button-step .number,
+.beat-47 > .button-step .number,
+.beat-48 > .button-step .number,
+.beat-49 > .button-step .number,
+.beat-50 > .button-step .number,
+.beat-51 > .button-step .number,
+.beat-52 > .button-step .number,
+.beat-53 > .button-step .number,
+.beat-54 > .button-step .number,
+.beat-55 > .button-step .number,
+.beat-56 > .button-step .number,
+.beat-57 > .button-step .number,
+.beat-58 > .button-step .number,
+.beat-59 > .button-step .number,
+.beat-60 > .button-step .number,
+.beat-61 > .button-step .number,
+.beat-62 > .button-step .number,
+.beat-63 > .button-step .number,
+.beat-64 > .button-step .number {
+  margin-left: -3px;
+}
+
 .fa-2x {
   position: absolute;
   pointer-events: none;
   z-index: 1;
   left: 0;
   right: 0;
-  top: 20%;
+  top: 30px;
   text-align: center;
-  opacity: 0.8;
+  transform: scale(1.2);
+}
+
+
+.abovecontainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.slider {
+  -webkit-appearance: none;
+  background: #FFFFFF;
+  outline: none;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  width: 169px;
+  height: 0;
+  margin-left: 58px;
+  border: 1px solid #005f42;
+    border-radius: 3px;
+  padding: 0;
+}
+
+.slider:hover {
+  opacity: 0.7;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #005f42;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #005f42;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
 }

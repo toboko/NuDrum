@@ -29,7 +29,6 @@
     <meta name="description" content="The project aims to create a polirhythmic and polymetric drum machine, through a responsive web interface. These features are limiting to all the instruments available on a drum machine">
     <meta name="googlebot" content="index">
     <title>NuDrum</title>
-
 </head>
 <body data-ng-controller="DmController as d" class="fade">
 
@@ -61,7 +60,7 @@
         </div>
     </div>
 <div id="surface">
-    <div id="browse-area">
+    <div id="browse-area" style="display: none;" class="slide-right">
         <div class="text-center">
             <p class="title">
                 <strong>Save Your Pattern</strong>
@@ -95,18 +94,16 @@
         <div id="main-area">
             <div class="line-insts">
                 <div id="inst-new" class="line-inst line-inst-margin-top line-inst-padding">
-                    <div id="set-{{d.instruments.length}}" class="box-label template-1" data-ng-click="newInst()">
-                        <i class="grid-area-c fas fa-plus click"></i>
-                        <p class="grid-area-a name">New Instrument</p>
+                    <div id="set-{{d.instruments.length}}" class="box-label template-3 click" data-ng-click="newInst()">
+                        <i class="grid-area-a fas fa-plus"></i>
+                        <p class="grid-area-b name">New Instrument</p>
                     </div>
                     <div class="line-steps line-steps-height">
                         <div class="inst-new-par step-height">
                             <input id="inst-new-name" aria-label="inst-new-name" type="text" placeholder="Track Name" />
                         </div>
-                        <div  id="browse-new-sample" class="inst-new-par step-height">
-                            <i class="fas open-folder click" data-ng-click="openNavigateArea()">
-                                <p >Samples </p>
-                            </i>
+                        <div  id="browse-new-sample" class="inst-new-par step-height click" data-ng-click="openNavigateArea()">
+                            <p>Choose Samples</p>
                             <small>{{d.sampleOn}}</small>
                         </div>
                     </div>
@@ -116,48 +113,75 @@
                      ng-init="instIndex = $index">
                      <div class="fa-2x"><i class="fas fa-spinner fa-spin"></i></div>
 
-                     <!-- Tools Area --!>
+                     <!-- Tools Area -->
                      <div id="tool-set-{{instIndex}}" class="box-label template-1">
-                        <p class="grid-area-c mute" ng-click="mute(instIndex)"><i class="fas fa-volume-up"></i></p>
-                        <p class="grid-area-a name">{{inst.inst.text}}  <small>{{inst.beat.id}}|{{d.maxoffset}}</small></p>
-                        <p class="grid-area-d clear" ng-click="clear(instIndex)"><i class="fas fa-cut"></i></p>
-                        <p class="grid-area-e clear" ng-click="copy(instIndex)"><i class="fas fa-copy"></i></p>
-                        <p class="grid-area-f clear" ng-click="paste(instIndex)"><i class="fas fa-paste"></i></p>
-                        <p class="grid-area-g edit" ng-click="select(instIndex)"><i class="fas open-set">Edit</i></p>
+                         <div class="grid-area-a name">
+                             <p>
+<!--                                 <i id="mute" class="fas fa-toggle-on" data-ng-click="mute(instIndex)"></i>-->
+                                 <small>{{inst.inst.text}}</small>
+                             </p>
+                         </div>
+                        <div class="grid-area-b volume">
+                            <div class="abovecontainer">
+                                <p><small>Volume</small></p>
+                                 <input class="slider" type="range" min="0" max="100" value="50"
+                                        ng-model="sliderModel"
+                                        ng-change="setVolume(sliderModel, instIndex)">
+                             </div>
+                        </div>
+                        <div class="grid-area-c beat">
+                            <div class="abovecontainer">
+                                <p><small>Beat {{d.pattern[instIndex].beat.id}}/{{d.maxoffset}}</small></p>
+                            </div>
+                            <p>
+                                <i class="fas fa-caret-up" data-ng-click="setBeat(true, instIndex)"></i>
+                                <i class="fas fa-caret-down" data-ng-click="setBeat(false, instIndex)"></i>
+                            </p>
+                        </div>
+                        <div class="grid-area-d steps">
+                            <div class="abovecontainer">
+                                <p><small>Steps {{d.pattern[instIndex].view}}</small></p>
+                            </div>
+                            <p>
+                                <i class="fas fa-caret-up" data-ng-click="setOffset(true, instIndex)"></i>
+                                <i class="fas fa-caret-down" data-ng-click="setOffset(false, instIndex)"></i>
+                            </p>
+                        </div>
+                        <div class="grid-area-e shift">
+                            <div class="abovecontainer">
+                                <p><small>Shift {{d.pattern[instIndex].shift}}</small></p>
+                            </div>
+                            <p>
+                                <i class="fas fa-caret-up" data-ng-click="shift(true, instIndex)"></i>
+                                <i class="fas fa-caret-down" data-ng-click="shift(false, instIndex)"></i>
+                            </p>
+                        </div>
+                        <div class="grid-area-f" data-ng-click="delete(instIndex)">
+                            <p>
+                                <i class="fas trash">
+                                    <i class="fas fa-trash"></i>
+                                    <small>Delete</small>
+                                </i>
+                            </p>
+                        </div>
+                         <div class="grid-area-h clear" ng-click="clear(instIndex)">
+                             <p>
+                                 <i class="fas fa-cut"></i>
+                             </p>
+                         </div>
+                         <div class="grid-area-i clear" ng-click="copy(instIndex)">
+                             <p>
+                                 <i class="fas fa-copy"></i>
+                             </p>
+                         </div>
+                         <div class="grid-area-j clear" ng-click="paste(instIndex)">
+                             <p>
+                                 <i class="fas fa-paste"></i>
+                             </p>
+                         </div>
                     </div>
 
-                    <!-- Edit Area --!>
-                     <div id="edit-set-{{instIndex}}" class="box-label template-2">
-                        <p class="grid-area-a">
-                            Volume
-                            <i class="fas fa-caret-up" data-ng-click="setVolume(true, instIndex)"></i>
-                            <small class="value">{{d.pattern[instIndex].inst.vol}}</small>
-                            <i class="fas fa-caret-down" data-ng-click="setVolume(false, instIndex)"></i>
-                        </p>
-                        <p class="grid-area-b">
-                            Offset
-                            <i class="fas fa-caret-up" data-ng-click="setOffset(true, instIndex)"></i>
-                            <small class="value">{{d.pattern[instIndex].view}}</small>
-                            <i class="fas fa-caret-down" data-ng-click="setOffset(false, instIndex)"></i>                                
-                        </p>
-                        <p class="grid-area-c">
-                            Beat
-                            <i class="fas fa-caret-up" data-ng-click="setBeat(true, instIndex)"></i>
-                            <small class="value">{{d.pattern[instIndex].beat.id}}|{{d.maxoffset}}</small>
-                            <i class="fas fa-caret-down" data-ng-click="setBeat(false, instIndex)"></i>
-                        </p>
-                        <p class="grid-area-d">
-                            Shift
-                            <i class="fas fa-caret-up" data-ng-click="shift(true, instIndex)"></i>
-                            <small class="value">{{d.pattern[instIndex].shift}}</small>
-                            <i class="fas fa-caret-down" data-ng-click="shift(false, instIndex)"></i>
-                        </p>
-                        <p class="grid-area-g click" data-ng-click="delete(instIndex)">
-                            <i class="fas fa-trash"></i>
-                        </p>
-                    </div>
-
-                    <!-- Steps Area --!>
+                    <!-- Steps Area -->
                     <div class="line-steps line-steps-height beat-{{inst.beat.offset}}">
                         <div  data-ng-repeat="step in inst.steps track by $index"
                               ng-init="stepIndex = $index"

@@ -364,6 +364,7 @@ app.controller("DmController", function($scope, $compile) {
                 let filterVal = 'blur(0px)';
                 // Remove loading icon
                 set.querySelector(".fa-2x").style.zIndex = '-1';
+                set.querySelector(".fa-2x").style.opacity = '0';
                 // Remove blur on loading
                 set.querySelectorAll(".line-steps").forEach(function (value) {
                     value.style.filter = filterVal;
@@ -561,17 +562,16 @@ app.controller("DmController", function($scope, $compile) {
       }
   };
 
-  $scope.setVolume = function(inc, inst) {
-    let newvol = d.pattern[inst].inst.vol;
-    newvol = inc ? (newvol += 1) : (newvol -= 1);
-    newvol = newvol <= 0 ? 0 : newvol;
-    newvol = newvol >= 10 ? 10 : newvol;
-    d.pattern[inst].inst.vol = newvol;
+  $scope.setVolume = function(vol, inst) {
+      let nVol = vol / 100;
+       nVol = (nVol === 0.01) ? 0 : Math.ceil(nVol * 10);
+
+    d.pattern[inst].inst.vol = nVol;
 
     if (d.pattern[inst].inst.mute) {
       d.pattern[inst].inst.audio.volume = 0;
     } else {
-      d.pattern[inst].inst.audio.volume = newvol / MAXVOLUME;
+      d.pattern[inst].inst.audio.volume = nVol / MAXVOLUME;
     }
   };
 
@@ -642,14 +642,6 @@ app.controller("DmController", function($scope, $compile) {
         }
     };
 
-    $scope.closeEditArea = function() {
-        let el = document.getElementById('edit-area');
-        el.classList.add('slide-left');
-        setTimeout(function() {
-            el.style.display = 'none';
-        }, 50);
-    };
-
     $scope.closeNavigateArea = function() {
         let el = document.getElementById('navigate');
         el.classList.add('slide-right');
@@ -658,19 +650,19 @@ app.controller("DmController", function($scope, $compile) {
         }, 500);
     };
 
-    $scope.closeBrowseArea = function() {
-        let el = document.getElementById('browse-area');
-        el.classList.add('slide-right');
-        setTimeout(function() {
-            el.style.display = 'none';
-        }, 50);
-    };
-
     $scope.openNavigateArea = function() {
         let el = document.getElementById('navigate');
         el.style.display = null;
         setTimeout(function() {
             el.classList.remove('slide-right');
+        }, 50);
+    };
+
+    $scope.closeBrowseArea = function() {
+        let el = document.getElementById('browse-area');
+        el.classList.add('slide-right');
+        setTimeout(function() {
+            el.style.display = 'none';
         }, 50);
     };
 
@@ -791,6 +783,7 @@ app.controller("DmController", function($scope, $compile) {
 
                             // Add loading icon
                             set.querySelector(".fa-2x").style.zIndex = '1';
+                            set.querySelector(".fa-2x").style.opacity = '1';
                             // Blur instruments on loading
                             set.querySelectorAll('.line-steps').forEach(function (value) {
                                 value.style.filter = filterVal;
@@ -869,16 +862,19 @@ $scope.paste = function(inst) {
   };
 
   $scope.mute = function(inst) {
+    let classMute = document.getElementById('inst-' + inst).querySelector('#mute').classList
       if(d.pattern[inst].inst.mute) {
         d.pattern[inst].inst.mute = false;
         d.pattern[inst].inst.audio.volume = d.pattern[inst].inst.vol  / MAXVOLUME;
-        document.getElementById('inst-' + inst).querySelector('.mute').innerHTML = '<i class="fas fa-volume-up"></i>';
+        classMute.add("fa-toggle-on")
+        classMute.remove("fa-toggle-off");
 
       } else {
         d.pattern[inst].inst.mute = true;
         d.pattern[inst].inst.audio.mute = true;
         d.pattern[inst].inst.audio.volume = 0.0;
-        document.getElementById('inst-' + inst).querySelector('.mute').innerHTML = '<i class="fas fa-volume-mute"></i>';
+        classMute.add("fa-toggle-off")
+        classMute.remove("fa-toggle-on");
       }
   };
 
@@ -943,12 +939,8 @@ $scope.paste = function(inst) {
   $scope.play = function() {
     // playing sounds
     d.pattern.forEach(function(value, inst) {
-
       // clock is in time with beat rate
-      if ( idxClk % value.beat.id === 1) {
-        $scope.playInst(inst, d.pattern[inst]);
-
-      } else if(value.beat.id === 1) {
+      if ( idxClk % value.beat.id === 1 || value.beat.id === 1) {
         $scope.playInst(inst, d.pattern[inst]);
       }
     });
@@ -1094,6 +1086,7 @@ $scope.paste = function(inst) {
             if (pattern.inst.audio === null) {
                 // Add loading icon
                 set.querySelector(".fa-2x").style.zIndex = '1';
+                set.querySelector(".fa-2x").style.opacity = '1';
 
                 set.querySelectorAll('.line-steps').forEach(function (value) {
                     value.style.filter = filterVal;
